@@ -1,0 +1,17 @@
+{
+	"pluginName": "任务清单",
+	"description": "任务清单",
+	"homepage": "https://github.com/vst93",
+	"author": "vst",
+	"main": "index.html",
+	"logo": "logo.png",
+	"version": "0.0.1",
+	"preload":"preload.js",
+	"features": [
+	    {
+			"code": "todoList",
+			"explain": "任务清单",
+	        "cmds":["任务清单","todoList"]
+		}
+	]
+}

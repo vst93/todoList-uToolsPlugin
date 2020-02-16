@@ -1,0 +1,273 @@
+body{
+    margin: 0;
+    width: 100vw;
+    font: 14px/1.5 "Helvetica Neue",Helvetica,Arial,"Microsoft Yahei","Hiragino Sans GB","HeitiSC","WenQuanYi Micro Hei",sans-serif;
+    cursor: default;
+}
+.float-left{
+    overflow: scroll;
+    width: 20vw;
+    float: left;
+    position: fixed;
+    margin: 0;
+    background-color: #e2e2e3;
+    height: 100%;
+    color: #151515;
+}
+.class-list ul{
+    font-size: 13px;
+}
+.add-class{
+    z-index: 999;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 20vw;
+    height: 56px;
+    line-height: 56px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #e2e2e3;
+}
+
+.add-class img{
+    width: 13px;
+    margin: 0;
+    margin-right: 10px;
+}
+
+.float-right{
+    width: 80vw;
+    right: 0;
+    float: right;
+    margin: 0;
+    background-color:  #6a7cc4;
+    min-height: 100vh;
+    display: block;
+}
+.work-list{
+    color: #fff;
+    font-size: 13px;
+    margin: 8px 2vw;
+}
+.work-list ul li{
+    margin-top: 0;
+    display: inline-flex;
+    width: 100%;
+    padding-bottom: 12px;
+    border-top: solid 2px #6779be;
+}
+.work-list ul li textarea{
+    /* height: 18px; */
+    background: none;
+    padding: 0px;
+    border: 0;
+    margin: 0;
+    font-size: 13px;
+    width: 90%;
+    /* width: 400px; */
+    outline:0;
+    /* overflow: hidden; */
+    resize:none;
+    word-break:break-all;
+    color: #fff;
+}
+
+ul{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.float-left ul li{
+    padding: 10px 25px;
+    margin: 0;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+}
+
+.float-left ul li::before{
+    content: '';
+    background-size: 18px 13px;
+    background-repeat: no-repeat;
+    padding: 6px 12px;
+    background-image: url(list.png);
+    margin-right: 4px;
+    background-position: 50%;
+}
+
+.float-left .active{
+    background-color:  #cacaca !important;
+}
+
+.add-list{
+    position: fixed;
+    bottom: 10px;
+    right: 0;
+    width: 74vw;
+    margin: 0 2vw;
+    padding: 1vw;
+    background-color: #5667a9;
+    border-radius: 6px;
+    opacity: 0.3;
+}
+.add-list textarea{
+    width: 100%;
+    max-height: 30vh;
+    padding: 0px;
+    margin: 0 auto;
+    border: 0;
+    font-size: 13px;
+    outline: 0;
+    background-color: #5668a9;
+    resize: none;
+    display: block;
+    color: #fff;
+    word-break: break-all;
+    line-height: 18px;
+}
+
+.add-list textarea::placeholder{
+    color: #909dd2;
+    text-align: center;
+}
+.work-list ul li textarea::placeholder{
+    color: #909dd2;
+    font-weight: 800;
+    text-align: left;
+}
+
+.work-list-header{
+    height: 50px;
+    /* width: 100%; */
+    border-bottom: dashed 1px #fff;
+    margin: 0 2vw;
+}
+.work-list-header input{
+    margin-top: 12px;
+    /* margin-left: 15px; */
+    width: 75%;
+    padding: 5px;
+    font-size: 20px;
+    border: 0;
+    outline: 0;
+    background-color: #6a7cc4;
+    color: #fff;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+}
+
+.add-list::-webkit-input-placeholder{ 
+    color:#fff !important; 
+} 
+
+.work-list-footer{
+    width: 100%;
+    height: 0px;
+    height: 6vh;
+    min-height: 50px;
+}
+.class-list{
+    padding-bottom: 56px;
+}
+
+.work-list-header-menu{
+    float: right;
+    right: 0;
+}
+.work-list-header-menu img:hover{
+    opacity: 1;
+}
+
+.work-list-header-menu img{
+    width: 20px;
+    height: 20px;
+    display: block;
+    margin: 0 auto;
+    margin-top: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 5px 8px;
+    background-color: #5667a9;
+    opacity: 0.3;
+    display: inline;
+}
+
+.work-list-li-tip{
+    color: #ccc6c6;
+    font-size: 12px;
+    float: right;
+    /* position: absolute; */
+    right: 0;
+    background-color: #71717187;
+    height: 17px;
+    padding: 2px 6px;
+    margin: 0;
+    border-radius: 5px;
+    margin-left: 2px;
+    cursor: default;
+}
+
+.add-list:hover{
+    opacity: 1;
+}
+
+.work-list input[type='checkbox'] {
+    display: none;
+}
+
+.textarea-choice-box+span {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    width: 21px;
+    height: 21px;
+    background-image: url("check-normal.png");
+    background-size: 100%;
+    margin-right: 8px;
+    background-repeat: no-repeat;
+}
+            
+.textarea-choice-box:checked+span {
+    background-image: url("check.png");
+}
+
+.bg2{
+    border-top: 1px dotted #b4afd8 !important;
+    padding-top: 12px !important;
+}
+
+.tip-div{
+    display: none;
+    z-index: 999999999999999999999;
+    position: absolute;
+    color: #6a7cc4;
+    border-style: hidden;
+    padding-top: 0 !important;
+    margin-top: 0;
+    max-width: 60vw;
+    width: auto;
+}
+
+.tip-div-before{
+    display: block;
+    width: 0px;
+    margin-left: 8px;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 6px solid #d3d8ed;
+}
+
+.tip-div-content{
+    background-color: #d3d8ed;
+    padding: 8px;
+    border-radius: 5px;
+    min-width: 20px;
+    width: auto;
+    white-space: nowrap;
+}
+

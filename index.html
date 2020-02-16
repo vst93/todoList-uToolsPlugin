@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf8" />
+    <link rel="stylesheet" type="text/css" href="assets/index.css">
+    <script src="assets/jquery-3.3.1.min.js"></script>
+</head>
+
+<body>
+    <div class="float-left">
+        <div class="class-list">
+            <ul>
+            </ul>
+        </div>
+        <div class="add-class" onclick="addClass()"><img src="assets/add.png"></img>新建分类</div>
+    </div>
+    <div class="float-right">
+        <div class="work-list-header">
+            <input class="work-list-header-input" type="text" value="" />
+            <div class="work-list-header-menu">
+                <img class="work-list-header-menu-filt v-tip" data-tip="点击切换筛选" src="assets/status_0.png" />
+                <img class="work-list-header-menu-sort v-tip" data-tip="点击切换排序" src="assets/sort_desc.png" />
+                <img class="work-list-header-menu-del v-tip" data-tip="双击删除" src="assets/del.png" />
+            </div>
+        </div>
+        <div class="work-list">
+            <ul>
+            </ul>
+        </div>
+        <div class="add-list">
+            <textarea rows="1" oninput="autoHeight(this)" date-class-id="" placeholder="+ 添加记录 ，编辑完成后回车提交"></textarea>
+        </div>
+        <div class="work-list-footer"></div>
+    </div>
+    <div class="tip-div">
+        <div class="tip-div-before"></div>
+        <div class="tip-div-content"></div>
+    </div>
+    <script src="assets/index.js"></script>
+    <script>
+        $(function () {
+            //分类名单击
+            $(".class-list ul").on('click', 'li', function () {
+                theId = $(this).attr('data-id');
+                $('.add-list textarea').attr('date-class-id', theId);
+                selectedClassId = theId;
+                showClassList();
+                showWorkList(theId);
+                event.stopPropagation();
+            });
+
+            //任务编辑失去焦点
+            $('.work-list-header-input').on('blur', function () {
+                classListLiSubmit();
+                event.stopPropagation();
+            });
+
+            //任务编辑回车监测
+            $('.work-list-header-input').on('keydown', function () {
+                if (event.keyCode == 13) {
+                    classListLiSubmit();
+                }
+                event.stopPropagation();
+            });
+
+            //添加记录回车监测
+            $('.add-list textarea').on('keydown', function (event) {
+                if (event.keyCode == 13) {
+                    theContent = $('.add-list textarea').val();
+                    theClassId = $('.add-list textarea').attr('date-class-id');
+                    addWorkList(theClassId, theContent)
+                    $('.add-list textarea').val('');
+                    window.event.returnValue = false;
+                    $('.add-list textarea').height('auto');
+                    if (sortSta == 'asc') {
+                        $('html').scrollTop(0);
+                    } else {
+                        $('html').scrollTop($('.float-right').height());
+                    }
+
+                }
+                event.stopPropagation();
+            });
+
+            //删除分类
+            $('img.work-list-header-menu-del').on('dblclick', () => {
+                if (selectedClassId == '') {
+                    return false;
+                }
+                if (window.confirm('确认删除当前分类吗？')) {
+                    $('.work-list-header-input').val('');
+                    $('.work-list ul').html('');
+                    deleteClass(selectedClassId);
+                }
+            });
+
+            //删除任务
+            $('.work-list ul').on('keydown', 'li textarea', function () {
+                var theContent = $(this).val();
+                console.log('theContent')
+                console.log(theContent)
+                if (theContent == undefined || theContent.length > 0) {
+                    event.stopPropagation();
+                    return;
+                }
+                if (event.keyCode == 8) {
+                    var theWorkId = $(this).parent('li').attr('data-work-id')
+
+                    if (window.confirm('确认删除当前任务吗？')) {
+                        deleteWork(selectedClassId, theWorkId);
+                    }
+                }
+                event.stopPropagation();
+            });
+
+            //任务编辑失去焦点
+            $('.work-list ul').on('blur', 'li textarea', function () {
+                workListSubmit(this);
+                event.stopPropagation();
+            });
+
+            $('.work-list ul').on('change', 'li input[type="checkbox"]', function () {
+                console.log('change')
+                var workId = $(this).parent('li').attr('data-work-id')
+                if ($(this).prop("checked")) {
+                    $(this).nextAll('textarea').css('text-decoration', 'line-through')
+                    $(this).nextAll('textarea').css('color', '#bbc')
+                    changeCheckBox(workId, 1)
+                } else {
+                    $(this).nextAll('textarea').css('text-decoration', 'none')
+                    $(this).nextAll('textarea').css('color')
+                    changeCheckBox(workId, 0)
+                }
+                showWorkList(selectedClassId);
+                event.stopPropagation();
+            });
+
+            $('.add-list textarea').on('blur focus', function () {
+                if (event.type == 'focus') {
+                    $('.add-list').css('opacity', 1);
+                } else {
+                    $('.add-list').css('opacity', '');
+                }
+            });
+
+            $('.work-list ul').on('click', 'span', function () {
+                console.log('click');
+                var thatElement = $(this).prev('input[type="checkbox"]')
+                if (thatElement.prop("checked")) {
+                    thatElement.attr('checked', null)
+                } else {
+                    thatElement.attr('checked', '1')
+                }
+                thatElement.trigger('change')
+            });
+
+            $('.float-right').on('mouseover mouseout', '.v-tip', function () {
+                if (event.type == 'mouseover') {
+                    var s = $(this).attr('data-tip');
+                    $('.tip-div-content').html(s);
+                     $('.tip-div').css('display', 'block')
+                    var X = $(this).position();
+                    var H = $(this).outerHeight(true);
+                    var T = H + X.top;
+                    var L = X.left + parseInt($(this).css('marginLeft'))
+                    //计算偏移量
+                    var ww = $(window).outerWidth();
+                    var dw = $('.tip-div').innerWidth();
+                    var c = L + dw - ww
+                    if (c > 0) {
+                        L = L - c - 1
+                        var ml = dw * 0.1 + c
+                        $('.tip-div-before').css('margin-left', ml + 'px')
+                    } else {
+                        $('.tip-div-before').css('margin-left', '8px')
+                    }
+
+                    $('.tip-div').css('top', T + 'px')
+                    $('.tip-div').css('left', L + 'px')
+                   
+                } else {
+                    $('.tip-div-content').html('');
+                    $('.tip-div').css('display', 'none')
+                }
+            });
+
+            $('.work-list-header-menu-sort').on('click', function () {
+                changeSortWithDb(function () {
+                    showWorkList(selectedClassId)
+                })
+            })
+
+            $('.work-list-header-menu-filt').on('click', function () {
+                changeFiltWithDb(function () {
+                    showWorkList(selectedClassId)
+                })
+            })
+
+        });
+    </script>
+
+</body>
+
+</html>
