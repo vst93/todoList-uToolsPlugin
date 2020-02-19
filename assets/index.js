@@ -8,15 +8,15 @@ sortSta = 'asc'
 filtStatus = 0
 
 utools.onPluginEnter(({ code, type, payload }) => {
-    if (code == 'todoList') {
-        if (showClassList()) {
-            getSortWithDb(function () {
-                getFiltWithDb(function () {
-                    showWorkList(selectedClassId);
+    initDb(function () {
+        if (code == 'todoList') {
+            if (showClassList()) {
+                getSortWithDb(function () {
+                    getFiltWithDb(showWorkList(selectedClassId))
                 })
-            })
+            }
         }
-    }
+    })
 });
 
 function autoHeight(elem) {
@@ -26,35 +26,38 @@ function autoHeight(elem) {
 }
 
 function showClassList() {
-    theData = utools.db.get(classListName);
-    classListJson = theData.data;
-    listJson = classListJson.list
+    console.log('showClassList')
+    var theData = utools.db.get(classListName);
+    var classListJson = theData.data;
+    var listJson = classListJson.list
     classListData = listJson
-    htmlClassList = '';
-
-    if (listJson.length <= 0) {
-        return false;
-    }
-    k = classListJson.firstId
-    if (selectedClassId == '') {
-        selectedClassId = classListJson.firstId
-    }
-    i = 0
-    while (listJson[k]) {
-        if (i > 200) {
-            break;
+    var htmlClassList = '';
+    console.log(listJson)
+    console.log(Object.keys(listJson).length)
+    if (Object.keys(listJson).length > 0) {
+        k = classListJson.firstId
+        if (selectedClassId == '') {
+            selectedClassId = classListJson.firstId
         }
-        if (listJson[k]['id'] == selectedClassId) {
-            active = ' class ="active" ';
-        } else {
-            active = '';
+        i = 0
+        while (listJson[k]) {
+            console.log('while:' + k)
+            if (i > 200) {
+                break;
+            }
+            if (listJson[k]['id'] == selectedClassId) {
+                active = ' class ="active" ';
+            } else {
+                active = '';
+            }
+            htmlClassList += '<li data-id="' + listJson[k]['id'] + '" data-content="' + listJson[k]['content'] + '" ' + active + '>' + listJson[k]['content'] + '</li>';
+            k = listJson[k]['childrenId']
+            i++;
         }
-        htmlClassList += '<li data-id="' + listJson[k]['id'] + '" data-content="' + listJson[k]['content'] + '" ' + active + '>' + listJson[k]['content'] + '</li>';
-        k = listJson[k]['childrenId']
-        i++;
+        $('.class-list ul').html(htmlClassList);
+        return true;
     }
-    $('.class-list ul').html(htmlClassList);
-    return true;
+    return false;
 }
 
 /**
@@ -63,23 +66,7 @@ function showClassList() {
 function addClass() {
     theData = utools.db.get(classListName);
     newId = createGuid();
-    if (!theData) {
-        classListJson = {
-            "firstId": newId,
-            "lastId": newId,
-            "list": {}
-        };
-        classListJson['list'][newId] = {
-            "parentId": 0,
-            "childrenId": 0,
-            "id": newId,
-            "content": "新建分类"
-        };
-        utools.db.put({
-            _id: classListName,
-            data: classListJson
-        });
-    } else {
+    if (theData) {
         classListJson = theData.data;
         classListJson['list'][newId] = {
             "parentId": classListJson.lastId,
@@ -87,10 +74,13 @@ function addClass() {
             "id": newId,
             "content": "新建分类"
         };
-        classListJson['list'][classListJson.lastId]["childrenId"] = newId;
-        classListJson['lastId'] = newId;
-        console.log('classListJson')
-        console.log(classListJson)
+        if (classListJson['list'][classListJson.lastId]) {
+            classListJson['list'][classListJson.lastId]["childrenId"] = newId;
+        }
+        if (classListJson.firstId == 0) {
+            classListJson.firstId = newId;
+        }
+        classListJson.lastId = newId;
         utools.db.put({
             _id: theData._id,
             data: classListJson,
@@ -113,8 +103,8 @@ function classListLiSubmit() {
     }
 }
 function editClassName(theId, newContent) {
-    theData = utools.db.get(classListName);
-    if (theData && newContent.length > 0) {
+    var theData = utools.db.get(classListName);
+    if (theData && Object.keys(newContent).length > 0) {
         classListJson = theData.data;
         classListJson['list'][theId]['content'] = newContent;
         utools.db.put({
@@ -188,11 +178,11 @@ function createGuid() {
  * 添加任务
  */
 function addWorkList(classId, theContent) {
-    console.log('addWorkList')
     if (classId == '') {
+        alert('请先选定清单分类');
         return false;
     }
-    if (theContent.length <= 0) {
+    if (Object.keys(theContent).length <= 0) {
         return false;
     }
     var theData = utools.db.get(workListName);
@@ -229,7 +219,7 @@ function addWorkList(classId, theContent) {
  * 展示任务列表
  */
 function showWorkList(theClassId) {
-    console.log('showWorkList')
+    console.log('showWorkList:' + theClassId)
     $('.work-list ul').html('');
     var theData = utools.db.get(workListName);
     var htmlStr = '';
@@ -301,7 +291,7 @@ function showWorkList(theClassId) {
     } else {
         $('.work-list-header-menu-filt').attr('src', 'assets/status_0.png')
     }
-    $('.work-list textarea').attr('placeholder','删除键触发删除')
+    $('.work-list textarea').attr('placeholder', '删除键触发删除')
     // autoAddListHeight();
 }
 
@@ -534,6 +524,32 @@ function changeFiltWithDb(func) {
             _id: filtName,
             data: filtStatus,
         })
+    }
+    func();
+}
+
+function initDb(func) {
+    newId = createGuid();
+    if (!utools.db.get(classListName)) {
+        classListJson = {
+            "firstId": 0,
+            "lastId": 0,
+            "list": {}
+        };
+        utools.db.put({
+            _id: classListName,
+            data: classListJson
+        });
+    }
+
+    if (!utools.db.get(workListName)) {
+        workListJson = {
+            "list": {}
+        };
+        utools.db.put({
+            _id: workListName,
+            data: workListJson
+        });
     }
     func();
 }

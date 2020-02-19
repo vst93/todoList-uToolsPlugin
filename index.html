@@ -68,8 +68,8 @@
             $('.add-list textarea').on('keydown', function (event) {
                 if (event.keyCode == 13) {
                     theContent = $('.add-list textarea').val();
-                    theClassId = $('.add-list textarea').attr('date-class-id');
-                    addWorkList(theClassId, theContent)
+                    // theClassId = $('.add-list textarea').attr('date-class-id');
+                    addWorkList(selectedClassId, theContent)
                     $('.add-list textarea').val('');
                     window.event.returnValue = false;
                     $('.add-list textarea').height('auto');
@@ -159,7 +159,7 @@
                 if (event.type == 'mouseover') {
                     var s = $(this).attr('data-tip');
                     $('.tip-div-content').html(s);
-                     $('.tip-div').css('display', 'block')
+                    $('.tip-div').css('display', 'block')
                     var X = $(this).position();
                     var H = $(this).outerHeight(true);
                     var T = H + X.top;
@@ -178,7 +178,7 @@
 
                     $('.tip-div').css('top', T + 'px')
                     $('.tip-div').css('left', L + 'px')
-                   
+
                 } else {
                     $('.tip-div-content').html('');
                     $('.tip-div').css('display', 'none')
