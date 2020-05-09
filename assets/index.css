@@ -1,11 +1,13 @@
 body{
+    overflow-x: hidden;
     margin: 0;
     width: 100vw;
     font: 14px/1.5 "Helvetica Neue",Helvetica,Arial,"Microsoft Yahei","Hiragino Sans GB","HeitiSC","WenQuanYi Micro Hei",sans-serif;
     cursor: default;
 }
 .float-left{
-    overflow: scroll;
+    /* overflow: hidden; */
+    overflow-y: scroll;
     width: 20vw;
     float: left;
     position: fixed;
@@ -44,6 +46,8 @@ body{
     background-color:  #6a7cc4;
     min-height: 100vh;
     display: block;
+    /* overflow-y: scroll !important;
+    overflow-x: hidden; */
 }
 .work-list{
     color: #fff;
@@ -102,6 +106,22 @@ ul{
     background-color:  #cacaca !important;
 }
 
+.float-left::-webkit-scrollbar { 
+    width: 0 !important;
+}
+
+/* 
+.work-list::-webkit-scrollbar { 
+    width: 0 !important;
+    height: 0 !important;
+}
+
+::-webkit-scrollbar { 
+    width: 0 !important;
+    height: 0 !important;
+} */
+
+
 .add-list{
     position: fixed;
     bottom: 10px;
@@ -111,7 +131,7 @@ ul{
     padding: 1vw;
     background-color: #5667a9;
     border-radius: 6px;
-    opacity: 0.3;
+    opacity: 0.6;
 }
 .add-list textarea{
     width: 100%;

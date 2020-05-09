@@ -8,13 +8,18 @@
 
 ![39jQV1.png](https://s2.ax1x.com/2020/02/17/39jQV1.png)
 
-项目地址：https://github.com/vst93/todoList-uToolsPlugin
+项目地址：[https://github.com/vst93/todoList-uToolsPlugin](https://github.com/vst93/todoList-uToolsPlugin)
 
 
 
 #### 下载地址：
-链接: https://pan.baidu.com/s/1ei0xyPb9GNaJ0RdPHcng0w 提取码: nm3b
+- 链接: [https://pan.baidu.com/s/1ei0xyPb9GNaJ0RdPHcng0w](https://pan.baidu.com/s/1ei0xyPb9GNaJ0RdPHcng0w) 
+- 提取码: nm3b
 
 ### 更新
 `v0.0.2`
-* 基础功能bug修改
+- 基础功能bug修改
+
+`v0.0.3`
+- 修复windows 和 linux 中的滚动条显示问题
+

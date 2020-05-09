@@ -394,21 +394,21 @@ var compare = function (prop, order) {
 
 function timestampToDate(timestamp) {
     var date = new Date(timestamp);
-    Y = date.getFullYear() + '.';
-    M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '.';
+    Y = date.getFullYear() + '/';
+    M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '/';
     D = date.getDate() + '';
     // h = date.getHours() + ':';
     // m = date.getMinutes() + ':';
     // s = date.getSeconds();
     // return Y + M + D + h + m + s;
-    return Y + M + D;
+    return  M + D;
 }
 
 function timestampToDateTime(timestamp) {
     var date = new Date(timestamp);
-    Y = date.getFullYear() + '年';
-    M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '月';
-    D = date.getDate() + '日 ';
+    Y = date.getFullYear() + '/';
+    M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '/';
+    D = date.getDate() + ' ';
     h = date.getHours();
     if (h < 10) {
         h = '0' + h
