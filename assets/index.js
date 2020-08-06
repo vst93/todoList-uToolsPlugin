@@ -206,6 +206,7 @@ function addWorkList(classId, theContent) {
         "id": newWorkId,
         "content": theContent,
         "timestamp": timestamp,
+        "finish_timestamp":0,
         "status": 0,
     };
     utools.db.put({
@@ -241,7 +242,10 @@ function showWorkList(theClassId) {
             }
 
             var dateStr = timestampToDate(theClassList[k]['timestamp']);
-            var tipStr = timestampToDateTime(theClassList[k]['timestamp']);
+            var tipStr = '添加：'+timestampToDateTime(theClassList[k]['timestamp']);
+            if (theClassList[k]['finish_timestamp'] !== undefined && theClassList[k]['finish_timestamp'] != 0){
+                tipStr += '<br/>完成：' + timestampToDateTime(theClassList[k]['finish_timestamp']);
+            }
             if (theClassList[k]['status'] == 1) {
                 checkBoxStr = 'checked '
                 textareaStyleStr = ' style="text-decoration:line-through;color: #bbc;" ';
@@ -322,6 +326,11 @@ function changeCheckBox(theWorkId, theStatus) {
     var workListJson = theWorkData.data
     if (workListJson['list'][selectedClassId][theWorkId]) {
         workListJson['list'][selectedClassId][theWorkId]['status'] = theStatus
+        if(theStatus===1){
+            workListJson['list'][selectedClassId][theWorkId]['finish_timestamp'] = Date.parse(new Date())
+        }else{
+            workListJson['list'][selectedClassId][theWorkId]['finish_timestamp'] = 0
+        }
         utools.db.put({
             _id: theWorkData._id,
             data: workListJson,
@@ -396,19 +405,19 @@ function timestampToDate(timestamp) {
     var date = new Date(timestamp);
     Y = date.getFullYear() + '/';
     M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '/';
-    D = date.getDate() + '';
+    D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + '';
     // h = date.getHours() + ':';
     // m = date.getMinutes() + ':';
     // s = date.getSeconds();
     // return Y + M + D + h + m + s;
-    return  M + D;
+    return M + D;
 }
 
 function timestampToDateTime(timestamp) {
     var date = new Date(timestamp);
     Y = date.getFullYear() + '/';
     M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '/';
-    D = date.getDate() + ' ';
+    D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' ';
     h = date.getHours();
     if (h < 10) {
         h = '0' + h
