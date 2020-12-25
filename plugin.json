@@ -1,6 +1,6 @@
 {
 	"pluginName": "任务清单",
-	"description": "任务清单",
+	"description": "任务清单(todoList)",
 	"homepage": "https://github.com/vst93",
 	"author": "vst",
 	"main": "index.html",
