@@ -37,6 +37,26 @@
         <div class="tip-div-before"></div>
         <div class="tip-div-content"></div>
     </div>
+    <div class="timeout-dash"></div>
+    <div class="timeout-dash-cancel"></div>
+
+    <div class="time-selector">
+        <div class="time-selector-div">
+            <h2>计时提醒</h2>
+            <div>
+                <label>时 长</label>
+                <input type="time" value="00:20" id='ts' />
+            </div>
+            <div>
+                <label>提 示</label>
+                <textarea></textarea>
+            </div>
+            <div>
+                <button id='time-begin'>开始计时</button>
+                <button id='time-cancel'>取消</button>
+            </div>
+        </div>
+    </div>
     <script src="assets/index.js"></script>
     <script>
         $(function () {
@@ -195,6 +215,48 @@
                 changeFiltWithDb(function () {
                     showWorkList(selectedClassId)
                 })
+            })
+            $('.work-list').on('click', '.v-tip', function () {
+                var textareaVal = $(this).siblings('textarea').val();
+                $('.time-selector textarea').val(textareaVal);
+                $('.time-selector').show()
+            })
+            $('#time-cancel').on('click', function () {
+                $('.time-selector').hide()
+            })
+
+            // $('.time-selector').on('click', function (e) {
+            //     $('.time-selector').hide()
+            //     return
+            // })
+
+            $('#time-begin').on('click', function () {
+                var textareaVal = $('.time-selector textarea').val();
+                var t = $('#ts').val()
+                t = t.split(':')
+                var theSec = 0
+                if (t[0] !== undefined) {
+                    theSec += parseInt(t[0]) * 3600
+                }
+                if (t[1] !== undefined) {
+                    theSec += parseInt(t[1]) * 60
+                }
+                regularlyRemind(theSec, textareaVal);
+                $('.time-selector').hide()
+            })
+
+            $('.timeout-dash').on('mouseover', function () {
+                $('.timeout-dash-cancel').show()
+            })
+
+            $('.timeout-dash-cancel').on('mouseout', function () {
+                $('.timeout-dash-cancel').hide()
+            })
+
+            $('.timeout-dash-cancel').on('click', function () {
+                clearRegularlyRemind();
+                $('.timeout-dash').hide()
+                $('.timeout-dash-cancel').hide()
             })
 
         });

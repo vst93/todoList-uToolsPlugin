@@ -4,8 +4,11 @@ const sortName = "sort";
 const filtName = "filt";
 selectedClassId = '';
 classListData = {};
-sortSta = 'asc'
-filtStatus = 0
+sortSta = 'asc';
+filtStatus = 0;
+timeOutNum = 0;  //定时器计数
+timeOutTimestamp = 0; //提示时间
+timeOutMsg = '';
 
 utools.onPluginEnter(({ code, type, payload }) => {
     initDb(function () {
@@ -206,7 +209,7 @@ function addWorkList(classId, theContent) {
         "id": newWorkId,
         "content": theContent,
         "timestamp": timestamp,
-        "finish_timestamp":0,
+        "finish_timestamp": 0,
         "status": 0,
     };
     utools.db.put({
@@ -242,8 +245,8 @@ function showWorkList(theClassId) {
             }
 
             var dateStr = timestampToDate(theClassList[k]['timestamp']);
-            var tipStr = '添加：'+timestampToDateTime(theClassList[k]['timestamp']);
-            if (theClassList[k]['finish_timestamp'] !== undefined && theClassList[k]['finish_timestamp'] != 0){
+            var tipStr = '添加：' + timestampToDateTime(theClassList[k]['timestamp']);
+            if (theClassList[k]['finish_timestamp'] !== undefined && theClassList[k]['finish_timestamp'] != 0) {
                 tipStr += '<br/>完成：' + timestampToDateTime(theClassList[k]['finish_timestamp']);
             }
             if (theClassList[k]['status'] == 1) {
@@ -326,9 +329,9 @@ function changeCheckBox(theWorkId, theStatus) {
     var workListJson = theWorkData.data
     if (workListJson['list'][selectedClassId][theWorkId]) {
         workListJson['list'][selectedClassId][theWorkId]['status'] = theStatus
-        if(theStatus===1){
+        if (theStatus === 1) {
             workListJson['list'][selectedClassId][theWorkId]['finish_timestamp'] = Date.parse(new Date())
-        }else{
+        } else {
             workListJson['list'][selectedClassId][theWorkId]['finish_timestamp'] = 0
         }
         utools.db.put({
@@ -561,4 +564,62 @@ function initDb(func) {
         });
     }
     func();
+}
+
+
+/**
+ * 定时提醒
+ */
+function regularlyRemind(second, msg) {
+    second = second * 1000;
+    nowTimestamp = new Date().getTime();
+    timeOutTimestamp = nowTimestamp + second;
+    timeOutNum = setInterval(function () {
+        if (new Date().getTime() >= timeOutTimestamp) {
+            utools.showNotification(msg);
+            clearRegularlyRemind(timeOutNum);
+        }
+    }, 1000);
+    setIntervalNum = 0;
+    setIntervalNum =  setInterval(function(){
+        dashString = regularlyRemindRemainTime();
+        if (dashString==false){
+            clearInterval(setIntervalNum);
+            $('.timeout-dash').text()
+            $('.timeout-dash').hide();
+            return;
+        }
+        $('.timeout-dash').text(regularlyRemindRemainTime())
+    },1000);
+    $('.timeout-dash').show();
+}
+
+/**
+ * 取消定时提醒
+ */
+function clearRegularlyRemind() {
+    timeOutTimestamp = 0;
+    timeOutMsg = 0;
+    clearTimeout(timeOutNum);
+}
+
+/**
+ * 定时提醒-剩余时间
+ */
+function regularlyRemindRemainTime() {
+    if (timeOutTimestamp <= 0) {
+        return false;
+    }
+    nowTimestamp = new Date().getTime();
+    remainTime = Math.floor((timeOutTimestamp - nowTimestamp) / 1000);
+    if (remainTime <= 0) {
+        return false;
+    }
+    if (remainTime > 3600) {
+        return Math.floor(remainTime / 3600) + ' h';
+    } else if (remainTime > 60) {
+        return Math.floor(remainTime / 60) + ' m';
+    } else {
+        return remainTime + ' s';
+    }
 }

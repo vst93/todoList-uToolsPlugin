@@ -6,7 +6,11 @@
 ```
 
 
-![39jQV1.png](https://s2.ax1x.com/2020/02/17/39jQV1.png)
+![rWIarR.png](https://s3.ax1x.com/2020/12/25/rWIarR.png)
+
+点击任务尾部日期可添加计时提醒，计时提醒只能同时存在一个，最大24小时
+
+![rWIKrn.png](https://s3.ax1x.com/2020/12/25/rWIKrn.png)
 
 项目地址：[https://github.com/vst93/todoList-uToolsPlugin](https://github.com/vst93/todoList-uToolsPlugin)
 
@@ -26,5 +30,8 @@
 `v0.0.4`
 - 处理日期个位问题
 - 记录“完成时间”
+
+`v0.0.5`
+- 添加计时提醒,点击任务尾部日期可添加计时提醒
 
 
