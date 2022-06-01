@@ -9,6 +9,7 @@ filtStatus = 0;
 timeOutNum = 0;  //定时器计数
 timeOutTimestamp = 0; //提示时间
 timeOutMsg = '';
+var onDragSta = false
 
 utools.onPluginEnter(({ code, type, payload }) => {
     initDb(function () {
@@ -20,6 +21,28 @@ utools.onPluginEnter(({ code, type, payload }) => {
             }
         }
     })
+});
+
+
+
+$(document).keydown(e => {
+    console.log(e.keyCode)
+    switch (e.keyCode) {
+        case 191:
+            $("#textarea-add").focus().select();
+            return false;
+            break;
+    }
+});
+
+$('body').keydown(e => {
+    console.log(e.keyCode)
+    switch (e.keyCode) {
+        case 9:
+            switchClass()
+            return false;
+            break;
+    }
 });
 
 function autoHeight(elem) {
@@ -53,7 +76,8 @@ function showClassList() {
             } else {
                 active = '';
             }
-            htmlClassList += '<li data-id="' + listJson[k]['id'] + '" data-content="' + listJson[k]['content'] + '" ' + active + '>' + listJson[k]['content'] + '</li>';
+            // htmlClassList += '<li draggable=true data-id="' + listJson[k]['id'] + '" data-content="' + listJson[k]['content'] + '" ' + active + '>' + listJson[k]['content'] + '</li>';
+            htmlClassList += '<li  data-id="' + listJson[k]['id'] + '" data-content="' + listJson[k]['content'] + '" ' + active + '>' + listJson[k]['content'] + '</li>';
             k = listJson[k]['childrenId']
             i++;
         }
@@ -223,7 +247,7 @@ function addWorkList(classId, theContent) {
  * 展示任务列表
  */
 function showWorkList(theClassId) {
-    console.log('showWorkList:' + theClassId)
+    // console.log('showWorkList:' + theClassId)
     $('.work-list ul').html('');
     var theData = utools.db.get(workListName);
     var htmlStr = '';
@@ -581,16 +605,16 @@ function regularlyRemind(second, msg) {
         }
     }, 1000);
     setIntervalNum = 0;
-    setIntervalNum =  setInterval(function(){
+    setIntervalNum = setInterval(function () {
         dashString = regularlyRemindRemainTime();
-        if (dashString==false){
+        if (dashString == false) {
             clearInterval(setIntervalNum);
             $('.timeout-dash').text()
             $('.timeout-dash').hide();
             return;
         }
         $('.timeout-dash').text(regularlyRemindRemainTime())
-    },1000);
+    }, 1000);
     $('.timeout-dash').show();
 }
 
@@ -621,5 +645,59 @@ function regularlyRemindRemainTime() {
         return Math.floor(remainTime / 60) + ' m';
     } else {
         return remainTime + ' s';
+    }
+}
+
+
+/**
+ * 确认修改分类排序
+ */
+function enterClassListSort() {
+    var theData = utools.db.get(classListName);
+    if (!theData) {
+        return false;
+    }
+
+    listLen = $('.class-list ul').children().length
+    theParentId = 0
+    theId = 0
+    $('.class-list ul').children().each(function (i, n) {
+        theId = $(n).attr('data-id')
+        //修改当前 item 的 parentId 为 上一次的id
+        theData.data.list[theId].parentId = theParentId;
+        if (i == 0) {  //第一个
+            theData.data.firstId = theId;
+        } else {
+            //修改上一级的 item 的 childrenId 为当前id
+            theData.data.list[theParentId].childrenId = theId;
+        }
+        theParentId = theId
+        theData.data.lastId = theId
+    });
+
+    //修改最后一个的 childrenId 为 0
+    theData.data.list[theId].childrenId = 0;
+    // console.log(theData)
+    classListData = theData.data.list
+    utools.db.promises.put(theData);
+}
+
+/**
+ * 切换下一个分类
+ */
+function switchClass() {
+    var seletedId = $("ul li.active").attr("data-id")
+    console.log('seletedId', seletedId)
+    if (classListData[seletedId].childrenId !== 0) {
+        console.log('ccc', classListData[seletedId].childrenId)
+        $("[data-id='" + classListData[seletedId].childrenId + "']").click()
+    } else {
+        for (let theId in classListData) {
+            if (classListData[theId].parentId == 0) {
+                console.log('xxxxx', theId)
+                $("[data-id='" + theId + "']").click()
+            }
+        }
+
     }
 }
