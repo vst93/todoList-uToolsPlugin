@@ -5,6 +5,7 @@
     <meta charset="utf8" />
     <link rel="stylesheet" type="text/css" href="assets/index.css">
     <script src="assets/jquery-3.3.1.min.js"></script>
+    <script src="assets/ddsort.min.js"></script>
 </head>
 
 <body>
@@ -29,7 +30,7 @@
             </ul>
         </div>
         <div class="add-list">
-            <textarea rows="1" oninput="autoHeight(this)" date-class-id="" placeholder="+ 添加记录 ，编辑完成后回车提交"></textarea>
+            <textarea id="textarea-add" rows="1" oninput="autoHeight(this)" date-class-id="" placeholder="「」添加记录 ，编辑完成后回车提交"></textarea>
         </div>
         <div class="work-list-footer"></div>
     </div>
@@ -69,6 +70,23 @@
                 showWorkList(theId);
                 event.stopPropagation();
             });
+
+
+            //拖动分类排序
+            $('.class-list ul').DDSort({
+                // 示例而用，默认即 li
+                target: 'li',
+                // 示例而用，默认有一定的样式    
+                floatStyle: {
+                    'background-color': '#f0f0f0'
+                },
+                down:function(){
+                },
+                up:function(){
+                    enterClassListSort();
+                }
+            });
+
 
             //任务编辑失去焦点
             $('.work-list-header-input').on('blur', function () {
@@ -259,6 +277,10 @@
                 $('.timeout-dash-cancel').hide()
             })
 
+
+            // $('.class-list ul').on('drag', 'li', function () {
+            //     classDrop(this)
+            // })
         });
     </script>
 
