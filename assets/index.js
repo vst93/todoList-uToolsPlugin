@@ -24,26 +24,20 @@ utools.onPluginEnter(({ code, type, payload }) => {
 });
 
 
-
-$(document).keydown(e => {
+//快捷键
+$(document).keyup(e => {
     console.log(e.keyCode)
-    switch (e.keyCode) {
-        case 191:
-            $("#textarea-add").focus().select();
-            return false;
-            break;
+    if ((e.ctrlKey) && (e.keyCode == 9)) {
+        switchClass()
+        return false;
+    }
+    if ((e.ctrlKey) && (e.keyCode == 191)) {
+        $("#textarea-add").focus().select();
+        return false;
     }
 });
 
-$('body').keydown(e => {
-    console.log(e.keyCode)
-    switch (e.keyCode) {
-        case 9:
-            switchClass()
-            return false;
-            break;
-    }
-});
+
 
 function autoHeight(elem) {
     elem.style.height = 'auto';
@@ -52,14 +46,14 @@ function autoHeight(elem) {
 }
 
 function showClassList() {
-    console.log('showClassList')
+    // console.log('showClassList')
     var theData = utools.db.get(classListName);
     var classListJson = theData.data;
     var listJson = classListJson.list
     classListData = listJson
     var htmlClassList = '';
-    console.log(listJson)
-    console.log(Object.keys(listJson).length)
+    // console.log(listJson)
+    // console.log(Object.keys(listJson).length)
     if (Object.keys(listJson).length > 0) {
         k = classListJson.firstId
         if (selectedClassId == '') {
@@ -67,7 +61,7 @@ function showClassList() {
         }
         i = 0
         while (listJson[k]) {
-            console.log('while:' + k)
+            // console.log('while:' + k)
             if (i > 200) {
                 break;
             }
@@ -147,8 +141,8 @@ function editClassName(theId, newContent) {
  * 删除分类
  */
 function deleteClass(theClassId) {
-    console.log('deleteClass')
-    console.log(theClassId)
+    // console.log('deleteClass')
+    // console.log(theClassId)
     theData = utools.db.get(classListName);
     classListJson = theData.data;
     listJson = classListJson.list
@@ -390,9 +384,9 @@ function deleteWork(theClassId, theWorkId) {
 
 function showData() {
     var theData1 = utools.db.get(classListName);
-    console.log(theData1)
+    // console.log(theData1)
     var theData2 = utools.db.get(workListName);
-    console.log(theData2)
+    // console.log(theData2)
 }
 
 
@@ -520,9 +514,9 @@ function changeSortWithDb(func) {
 
 function autoAddListHeight() {
     var wlfh = $('.add-list').outerHeight(true);
-    console.log(wlfh);
+    // console.log(wlfh);
     wlfh = (wlfh + 10) + 'px';
-    console.log(wlfh);
+    // console.log(wlfh);
     $('.work-list-footer').height(wlfh)
 }
 
@@ -699,5 +693,50 @@ function switchClass() {
             }
         }
 
+    }
+}
+
+/**
+ * 导出单个分类的内容
+ */
+function exportClassItems(classId) {
+    if (!classId || classListData[classId] == undefined) {
+        console.log(classId + ' id不存在')
+        utools.showNotification('导出失败(001)')
+        return
+    }
+    var theData = utools.db.get(workListName);
+
+    if (theData['data']['list'][classId]) {
+        var items = [];
+
+        var theClassList = theData['data']['list'][classId];
+        theClassList = Object.values(theClassList)
+        theClassList.sort(compare('timestamp', sortSta));
+        for (k in theClassList) {
+            var theItem = {}
+            theItem.content = theClassList[k]['content']
+            theItem.create_time = timestampToDateTime(theClassList[k]['timestamp']);
+
+            if (theClassList[k]['finish_timestamp'] !== undefined && theClassList[k]['finish_timestamp'] != 0) {
+                theItem.finish_time = timestampToDateTime(theClassList[k]['finish_timestamp']);
+            } else {
+                theItem.finish_time = ''
+            }
+
+            if (theClassList[k]['status'] == 1) {
+                theItem.status = '已完成'
+            } else {
+                theItem.status = ''
+            }
+            items.push(theItem)
+        }
+        var jsonData = {
+            items: items,
+            sheetName: classListData[classId].content,
+        }
+        exportToExcel(jsonData)
+    } else {
+        utools.showNotification('导出失败(002)')
     }
 }
