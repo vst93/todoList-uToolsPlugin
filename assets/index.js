@@ -740,3 +740,23 @@ function exportClassItems(classId) {
         utools.showNotification('导出失败(002)')
     }
 }
+
+function exportToExcel(jsonData) {
+    // var filepathDir = utools.getPath('downloads')
+    // var filePathSeparate = "/"
+    // if (utools.isWindows()) {
+    //     filePathSeparate = "\\"
+    // }
+    // var fullFilePath = filepathDir + filePathSeparate + "todoList-export-" + new Date().getTime() + ".xlsx"
+    var fullFilePath = "todoList-export-" + new Date().getTime() + ".xlsx"
+
+    const headerReplace = { content: "任务内容", status: "状态", create_time: "创建时间", finish_time: "完成时间" };
+
+    const sheet = [headerReplace, ...jsonData.items];
+
+    const wb = XLSX.utils.book_new()
+    const header = ['content', 'status', 'create_time', 'finish_time']
+    const ws = XLSX.utils.json_to_sheet(sheet, { header: header, skipHeader: true })
+    XLSX.utils.book_append_sheet(wb, ws, jsonData.sheetName)
+    XLSX.writeFile(wb, fullFilePath);
+}

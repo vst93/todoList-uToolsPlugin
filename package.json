@@ -2,6 +2,7 @@
   "dependencies": {
     "json2excel": "^1.2.0",
     "json2xlsx-export": "^1.2.2",
-    "node-xlsx": "^0.21.0"
+    "node-xlsx": "^0.21.0",
+    "xml": "^1.0.1"
   }
 }
