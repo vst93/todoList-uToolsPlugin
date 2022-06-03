@@ -22,6 +22,7 @@
             <div class="work-list-header-menu">
                 <img class="work-list-header-menu-filt v-tip" data-tip="点击切换筛选" src="assets/status_0.png" />
                 <img class="work-list-header-menu-sort v-tip" data-tip="点击切换排序" src="assets/sort_desc.png" />
+                <img class="work-list-header-menu-export v-tip" data-tip="点击导出" src="assets/export.png" />
                 <img class="work-list-header-menu-del v-tip" data-tip="双击删除" src="assets/del.png" />
             </div>
         </div>
@@ -30,7 +31,8 @@
             </ul>
         </div>
         <div class="add-list">
-            <textarea id="textarea-add" rows="1" oninput="autoHeight(this)" date-class-id="" placeholder="「」添加记录 ，编辑完成后回车提交"></textarea>
+            <textarea id="textarea-add" rows="1" oninput="autoHeight(this)" date-class-id=""
+                placeholder="「Ctrl + /」添加记录 ，编辑完成后回车提交"></textarea>
         </div>
         <div class="work-list-footer"></div>
     </div>
@@ -80,9 +82,9 @@
                 floatStyle: {
                     'background-color': '#f0f0f0'
                 },
-                down:function(){
+                down: function () {
                 },
-                up:function(){
+                up: function () {
                     enterClassListSort();
                 }
             });
@@ -136,8 +138,8 @@
             //删除任务
             $('.work-list ul').on('keydown', 'li textarea', function () {
                 var theContent = $(this).val();
-                console.log('theContent')
-                console.log(theContent)
+                // console.log('theContent')
+                // console.log(theContent)
                 if (theContent == undefined || theContent.length > 0) {
                     event.stopPropagation();
                     return;
@@ -149,6 +151,7 @@
                         deleteWork(selectedClassId, theWorkId);
                     }
                 }
+                utools.showMainWindow()
                 event.stopPropagation();
             });
 
@@ -243,6 +246,10 @@
                 $('.time-selector').hide()
             })
 
+             $('.work-list-header-menu-export').on('click', function () {
+                exportClassItems(selectedClassId)
+            })
+
             // $('.time-selector').on('click', function (e) {
             //     $('.time-selector').hide()
             //     return
@@ -276,6 +283,7 @@
                 $('.timeout-dash').hide()
                 $('.timeout-dash-cancel').hide()
             })
+
 
 
             // $('.class-list ul').on('drag', 'li', function () {
