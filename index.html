@@ -22,6 +22,7 @@
             <input class="work-list-header-input" type="text" value="" />
             <div class="work-list-header-menu">
                 <img class="work-list-header-menu-filt v-tip" data-tip="点击切换筛选" src="assets/status_0.png" />
+                <img class="work-list-header-menu-sort-by v-tip" data-tip="点击切换排序字段" src="assets/sort_by_add.png" />
                 <img class="work-list-header-menu-sort v-tip" data-tip="点击切换排序" src="assets/sort_desc.png" />
                 <img class="work-list-header-menu-export v-tip" data-tip="点击导出" src="assets/export.png" />
                 <img class="work-list-header-menu-del v-tip" data-tip="双击删除" src="assets/del.png" />
@@ -234,6 +235,12 @@
                 })
             })
 
+            $('.work-list-header-menu-sort-by').on('click', function () {
+                changeSortByWithDb(function () {
+                    showWorkList(selectedClassId)
+                })
+            })
+
             $('.work-list-header-menu-filt').on('click', function () {
                 changeFiltWithDb(function () {
                     showWorkList(selectedClassId)
@@ -248,7 +255,7 @@
                 $('.time-selector').hide()
             })
 
-             $('.work-list-header-menu-export').on('click', function () {
+            $('.work-list-header-menu-export').on('click', function () {
                 exportClassItems(selectedClassId)
             })
 

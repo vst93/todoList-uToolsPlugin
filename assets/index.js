@@ -1,10 +1,12 @@
 const classListName = "classList";
 const workListName = "workList";
 const sortName = "sort";
+const sortNameBy = "sortBy";
 const filtName = "filt";
 selectedClassId = '';
 classListData = {};
 sortSta = 'asc';
+sortBy = 'add';
 filtStatus = 0;
 timeOutNum = 0;  //定时器计数
 timeOutTimestamp = 0; //提示时间
@@ -251,9 +253,18 @@ function showWorkList(theClassId) {
     if (theData['data']['list'][theClassId]) {
         theClassList = theData['data']['list'][theClassId];
         theClassList = Object.values(theClassList)
-        theClassList.sort(compare('timestamp', sortSta));
+        if(sortBy=='finish'){
+            theClassList.sort(compare('finish_timestamp', sortSta));
+        }else{
+            theClassList.sort(compare('timestamp', sortSta));
+        }
         var bgClass = ''
         var theDay = 0;
+        var sortField = 'timestamp'
+        if (sortBy == 'finish') {
+            sortField = 'finish_timestamp'
+        } 
+
         for (k in theClassList) {
             //状态筛选
             if (filtStatus == 1 && theClassList[k]['status'] != 0) {
@@ -261,8 +272,7 @@ function showWorkList(theClassId) {
             } else if (filtStatus == 2 && theClassList[k]['status'] != 1) {
                 continue;
             }
-
-            var dateStr = timestampToDate(theClassList[k]['timestamp']);
+            var dateStr = timestampToDate(theClassList[k][sortField]);
             var tipStr = '添加：' + timestampToDateTime(theClassList[k]['timestamp']);
             if (theClassList[k]['finish_timestamp'] !== undefined && theClassList[k]['finish_timestamp'] != 0) {
                 tipStr += '<br/>完成：' + timestampToDateTime(theClassList[k]['finish_timestamp']);
@@ -274,8 +284,7 @@ function showWorkList(theClassId) {
                 checkBoxStr = ''
                 textareaStyleStr = '';
             }
-
-            var date = new Date(theClassList[k]['timestamp']);
+            var date = new Date(theClassList[k][sortField]);
             var D = date.getDate() + '';
             if (theDay > 0 && theDay != D) {
                 bgClass = 'bg2'
@@ -301,7 +310,12 @@ function showWorkList(theClassId) {
 
     //显示标题
     $('.work-list-header-input').val(classListData[theClassId]['content']);
-
+    //刷新排序字段图标
+    if (sortBy == 'finish') {
+        $('.work-list-header-menu-sort-by').attr('src', 'assets/sort_by_finish.png')
+    } else {
+        $('.work-list-header-menu-sort-by').attr('src', 'assets/sort_by_add.png')
+    }
     //刷新排序图标
     if (sortSta == 'asc') {
         $('.work-list-header-menu-sort').attr('src', 'assets/sort_asc.png')
@@ -397,9 +411,17 @@ var compare = function (prop, order) {
     return function (obj1, obj2) {
         var val1 = obj1[prop];
         var val2 = obj2[prop];
-        if (!isNaN(Number(val1)) && !isNaN(Number(val2))) {
+        if (!isNaN(Number(val1)) ) {
             val1 = Number(val1);
+            // val2 = Number(val2);
+        }else{
+            val1 = 0;
+        }
+        if (!isNaN(Number(val2))) {
+            // val1 = Number(val1);
             val2 = Number(val2);
+        }else{
+            val2 = 0;
         }
         if (order == 'desc') {
             if (val1 < val2) {
@@ -423,6 +445,9 @@ var compare = function (prop, order) {
 
 
 function timestampToDate(timestamp) {
+    if (timestamp == undefined || timestamp == ''){
+        return '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+    }
     var date = new Date(timestamp);
     Y = date.getFullYear() + '/';
     M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '/';
@@ -487,6 +512,20 @@ function getSortWithDb(func) {
 }
 
 /**
+ * 从db获取排序字段
+ */
+function getSortByWithDb(func) {
+    var theData = utools.db.get(sortNameBy);
+    if (theData && theData.data == 'finish') {
+        sortBy = 'finish'
+    } else {
+        sortBy = 'add'
+    }
+    func();
+}
+
+
+/**
  * 切换排序方式配置项
  * @param {*} func 
  */
@@ -507,6 +546,32 @@ function changeSortWithDb(func) {
         utools.db.put({
             _id: sortName,
             data: sortSta,
+        })
+    }
+    func();
+}
+
+/**
+ * 切换排序方式字段
+ * @param {*} func 
+ */
+function changeSortByWithDb(func) {
+    if (sortBy == 'finish') {
+        sortBy = 'add'
+    } else {
+        sortBy = 'finish'
+    }
+    var theData = utools.db.get(sortNameBy);
+    if (theData) {
+        utools.db.put({
+            _id: theData._id,
+            data: sortBy,
+            _rev: theData._rev
+        })
+    } else {
+        utools.db.put({
+            _id: sortNameBy,
+            data: sortBy,
         })
     }
     func();
@@ -712,7 +777,11 @@ function exportClassItems(classId) {
 
         var theClassList = theData['data']['list'][classId];
         theClassList = Object.values(theClassList)
-        theClassList.sort(compare('timestamp', sortSta));
+        if(sortNameBy=='finish'){
+            theClassList.sort(compare('timestamp', sortSta));
+        }else{
+            theClassList.sort(compare('finish_timestamp', sortSta));
+        }
         for (k in theClassList) {
             var theItem = {}
             theItem.content = theClassList[k]['content']
