@@ -12,8 +12,19 @@ timeOutNum = 0;  //定时器计数
 timeOutTimestamp = 0; //提示时间
 timeOutMsg = '';
 var onDragSta = false
+var searchKeyword = ""
+var timerId;
 
 utools.onPluginEnter(({ code, type, payload }) => {
+    utools.setSubInput(({ text }) => {
+        debounce(function () {
+            searchKeyword = text
+            showClassList()
+            if(text!=''){
+                utools.findInPage(text)
+            }
+        }, 500)
+    }, "输入关键词进行搜索");
     initDb(function () {
         if (code == 'todoList') {
             if (showClassList()) {
@@ -21,6 +32,7 @@ utools.onPluginEnter(({ code, type, payload }) => {
                     getFiltWithDb(showWorkList(selectedClassId))
                 })
             }
+            
         }
     })
 });
@@ -62,15 +74,43 @@ function showClassList() {
             selectedClassId = classListJson.firstId
         }
         i = 0
+        if (searchKeyword != '') {
+            var theWorkData = utools.db.get(workListName);
+        }else{
+            var theWorkData = {};
+        }
         while (listJson[k]) {
             // console.log('while:' + k)
             if (i > 200) {
                 break;
             }
+
+            var searchLabel = '';
+            if (searchKeyword != ''){
+                if ((listJson[k]['content']).indexOf(searchKeyword) == -1){
+                    var theClassId = listJson[k]['id'];
+                    if (theWorkData['data']['list'][theClassId]) {
+                        var theWorkInfo = theWorkData['data']['list'][theClassId];
+                    }else{
+                        var theWorkInfo = {};
+                    }
+                   
+                    for (let theWorkInfoKey in theWorkInfo) {
+                        if (theWorkInfo[theWorkInfoKey].content.indexOf(searchKeyword) !== -1){
+                            searchLabel = ' search-label';
+                            break;
+                        }
+                    }
+                }else{
+                    searchLabel = ' search-label';
+                }
+            }
+
+            
             if (listJson[k]['id'] == selectedClassId) {
-                active = ' class ="active" ';
+                active = ' class ="active' + searchLabel +'" ';
             } else {
-                active = '';
+                active = ' class = "' + searchLabel +'" ';
             }
             // htmlClassList += '<li draggable=true data-id="' + listJson[k]['id'] + '" data-content="' + listJson[k]['content'] + '" ' + active + '>' + listJson[k]['content'] + '</li>';
             htmlClassList += '<li  data-id="' + listJson[k]['id'] + '" data-content="' + listJson[k]['content'] + '" ' + active + '>' + listJson[k]['content'] + '</li>';
@@ -331,7 +371,12 @@ function showWorkList(theClassId) {
         $('.work-list-header-menu-filt').attr('src', 'assets/status_0.png')
     }
     $('.work-list textarea').attr('placeholder', '删除键触发删除')
+    
     // autoAddListHeight();
+    //高亮
+    if(searchKeyword!=''){
+        utools.findInPage(searchKeyword)
+    }
 }
 
 /**
@@ -746,9 +791,9 @@ function enterClassListSort() {
  */
 function switchClass() {
     var seletedId = $("ul li.active").attr("data-id")
-    console.log('seletedId', seletedId)
+    // console.log('seletedId', seletedId)
     if (classListData[seletedId].childrenId !== 0) {
-        console.log('ccc', classListData[seletedId].childrenId)
+        // console.log('ccc', classListData[seletedId].childrenId)
         $("[data-id='" + classListData[seletedId].childrenId + "']").click()
     } else {
         for (let theId in classListData) {
@@ -828,4 +873,12 @@ function exportToExcel(jsonData) {
     const ws = XLSX.utils.json_to_sheet(sheet, { header: header, skipHeader: true })
     XLSX.utils.book_append_sheet(wb, ws, jsonData.sheetName)
     XLSX.writeFile(wb, fullFilePath);
+}
+
+//防抖函数
+function debounce(func, delay) {
+    clearTimeout(timerId);
+    timerId = setTimeout(() => {
+        func.apply(this, arguments);
+    }, delay);
 }
