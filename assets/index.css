@@ -1,11 +1,13 @@
-body{
+body {
     overflow-x: hidden;
     margin: 0;
     width: 100vw;
-    font: 14px/1.5 "Helvetica Neue",Helvetica,Arial,"Microsoft Yahei","Hiragino Sans GB","HeitiSC","WenQuanYi Micro Hei",sans-serif;
+    font: 14px/1.5 "Helvetica Neue", Helvetica, Arial, "Microsoft Yahei", "Hiragino Sans GB", "HeitiSC", "WenQuanYi Micro Hei", sans-serif;
     cursor: default;
+    user-select: none;
 }
-.float-left{
+
+.float-left {
     /* overflow: hidden; */
     overflow-y: scroll;
     width: 20vw;
@@ -16,10 +18,12 @@ body{
     height: 100%;
     color: #151515;
 }
-.class-list ul{
+
+.class-list ul {
     font-size: 13px;
 }
-.add-class{
+
+.add-class {
     z-index: 999;
     position: fixed;
     bottom: 0;
@@ -32,36 +36,39 @@ body{
     background-color: #e2e2e3;
 }
 
-.add-class img{
+.add-class img {
     width: 13px;
     margin: 0;
     margin-right: 10px;
 }
 
-.float-right{
+.float-right {
     width: 80vw;
     right: 0;
     float: right;
     margin: 0;
-    background-color:  #6a7cc4;
+    background-color: #6a7cc4;
     min-height: 100vh;
     display: block;
     /* overflow-y: scroll !important;
     overflow-x: hidden; */
 }
-.work-list{
+
+.work-list {
     color: #fff;
     font-size: 13px;
     margin: 8px 2vw;
 }
-.work-list ul li{
+
+.work-list ul li {
     margin-top: 0;
     display: inline-flex;
     width: 100%;
     padding-bottom: 12px;
     border-top: solid 2px #6779be;
 }
-.work-list ul li textarea{
+
+.work-list ul li textarea {
     /* height: 18px; */
     background: none;
     padding: 0px;
@@ -70,30 +77,30 @@ body{
     font-size: 13px;
     width: 90%;
     /* width: 400px; */
-    outline:0;
+    outline: 0;
     /* overflow: hidden; */
-    resize:none;
-    word-break:break-all;
+    resize: none;
+    word-break: break-all;
     color: #ffffff;
-    caret-color:  #ffffff;
+    caret-color: #ffffff;
 }
 
-ul{
+ul {
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
-.float-left ul li{
+.float-left ul li {
     padding: 10px 25px;
     margin: 0;
     cursor: pointer;
     overflow: hidden;
-    text-overflow:ellipsis;
+    text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.float-left ul li::before{
+.float-left ul li::before {
     content: '';
     background-size: 18px 13px;
     background-repeat: no-repeat;
@@ -103,11 +110,11 @@ ul{
     background-position: 50%;
 }
 
-.float-left .active{
-    background-color:  #cacaca !important;
+.float-left .active {
+    background-color: #cacaca !important;
 }
 
-.float-left::-webkit-scrollbar { 
+.float-left::-webkit-scrollbar {
     width: 0 !important;
 }
 
@@ -123,7 +130,7 @@ ul{
 } */
 
 
-.add-list{
+.add-list {
     position: fixed;
     bottom: 10px;
     right: 0;
@@ -134,7 +141,8 @@ ul{
     border-radius: 6px;
     opacity: 0.6;
 }
-.add-list textarea{
+
+.add-list textarea {
     width: 100%;
     max-height: 30vh;
     padding: 0px;
@@ -150,23 +158,25 @@ ul{
     line-height: 18px;
 }
 
-.add-list textarea::placeholder{
+.add-list textarea::placeholder {
     color: #909dd2;
     text-align: center;
 }
-.work-list ul li textarea::placeholder{
+
+.work-list ul li textarea::placeholder {
     color: #909dd2;
     font-weight: 800;
     text-align: left;
 }
 
-.work-list-header{
+.work-list-header {
     height: 50px;
     /* width: 100%; */
     border-bottom: dashed 1px #fff;
     margin: 0 2vw;
 }
-.work-list-header input{
+
+.work-list-header input {
     margin-top: 12px;
     /* margin-left: 15px; */
     width: 63%;
@@ -178,33 +188,35 @@ ul{
     color: #fff;
     font-weight: 600;
     overflow: hidden;
-    text-overflow:ellipsis;
+    text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.add-list::-webkit-input-placeholder{ 
-    color:#fff !important; 
-} 
+.add-list::-webkit-input-placeholder {
+    color: #fff !important;
+}
 
-.work-list-footer{
+.work-list-footer {
     width: 100%;
     height: 0px;
     height: 6vh;
     min-height: 50px;
 }
-.class-list{
+
+.class-list {
     padding-bottom: 56px;
 }
 
-.work-list-header-menu{
+.work-list-header-menu {
     float: right;
     right: 0;
 }
-.work-list-header-menu img:hover{
+
+.work-list-header-menu img:hover {
     opacity: 1;
 }
 
-.work-list-header-menu img{
+.work-list-header-menu img {
     width: 20px;
     height: 20px;
     display: block;
@@ -218,7 +230,7 @@ ul{
     display: inline;
 }
 
-.work-list-li-tip{
+.work-list-li-tip {
     color: #ccc6c6;
     font-size: 12px;
     float: right;
@@ -233,7 +245,7 @@ ul{
     cursor: pointer;
 }
 
-.add-list:hover{
+.add-list:hover {
     opacity: 1;
 }
 
@@ -252,17 +264,17 @@ ul{
     margin-right: 8px;
     background-repeat: no-repeat;
 }
-            
+
 .textarea-choice-box:checked+span {
     background-image: url("check.png");
 }
 
-.bg2{
+.bg2 {
     border-top: 1px dotted #b4afd8 !important;
     padding-top: 12px !important;
 }
 
-.tip-div{
+.tip-div {
     display: none;
     z-index: 999999999999999999999;
     position: absolute;
@@ -274,7 +286,7 @@ ul{
     width: auto;
 }
 
-.tip-div-before{
+.tip-div-before {
     display: block;
     width: 0px;
     margin-left: 8px;
@@ -283,7 +295,7 @@ ul{
     border-bottom: 6px solid #d3d8ed;
 }
 
-.tip-div-content{
+.tip-div-content {
     background-color: #d3d8ed;
     padding: 8px;
     border-radius: 5px;
@@ -292,7 +304,7 @@ ul{
     white-space: nowrap;
 }
 
-.timeout-dash{
+.timeout-dash {
     display: none;
     width: 45px;
     height: 45px;
@@ -310,7 +322,7 @@ ul{
     border: 1px solid #ffb5b5a3;
 }
 
-.time-selector{
+.time-selector {
     position: fixed;
     top: 0;
     width: 100%;
@@ -320,7 +332,7 @@ ul{
     display: none;
 }
 
-.time-selector-div{
+.time-selector-div {
     width: 300px;
     margin: 0 auto;
     background: #fff;
@@ -329,26 +341,26 @@ ul{
     border-radius: 3px;
 }
 
-.time-selector-div label{
+.time-selector-div label {
     width: 50px;
     display: inline-block;
     vertical-align: top;
 }
 
-.time-selector-div input{
+.time-selector-div input {
     width: 210px;
     border-radius: 6px;
     padding: 2px;
     border: 1px solid #000;
 }
 
-.time-selector-div div{
+.time-selector-div div {
     margin-top: 10px;
     padding: 3px 13px;
 }
 
 
-.time-selector-div textarea{
+.time-selector-div textarea {
     width: 210px;
     height: 60px;
     border-radius: 6px;
@@ -356,7 +368,7 @@ ul{
     border: 1px solid #000;
 }
 
-.time-selector-div h2{
+.time-selector-div h2 {
     background: #6a7cc4;
     margin: 0;
     padding: 12px 12px;
@@ -366,7 +378,7 @@ ul{
     border-top-right-radius: 3px;
 }
 
-.time-selector-div button{
+.time-selector-div button {
     border: 0;
     cursor: pointer;
     padding: 5px 10px;
@@ -375,20 +387,21 @@ ul{
     color: #ffffff;
 }
 
-.time-selector-div button:hover{
+.time-selector-div button:hover {
     background: #d3d8ed !important;
 }
 
-#time-begin{
+#time-begin {
     float: right;
     background: #909dd2;
 }
-#time-cancel{
+
+#time-cancel {
     float: right;
     background: #e2e2e3;
 }
 
-.timeout-dash-cancel{
+.timeout-dash-cancel {
     display: none;
     width: 45px;
     height: 45px;
@@ -410,24 +423,78 @@ ul{
 }
 
 @-webkit-keyframes timeout-dash-bg-color2 {
-  0% { background-color: #e74c3cb5; }
-  20% { background-color: #f1c40fb5; }
-  40% { background-color: #1abc9cb5; }
-  60% { background-color: #3498dbb5; }
-  80% { background-color: #9b59b6b5; }
-  100% { background-color: #e74c3cb5; }
+    0% {
+        background-color: #e74c3cb5;
+    }
+
+    20% {
+        background-color: #f1c40fb5;
+    }
+
+    40% {
+        background-color: #1abc9cb5;
+    }
+
+    60% {
+        background-color: #3498dbb5;
+    }
+
+    80% {
+        background-color: #9b59b6b5;
+    }
+
+    100% {
+        background-color: #e74c3cb5;
+    }
 }
 
 @-webkit-keyframes timeout-dash-bg-color {
-  0% { background-color: #b4afd8b5; }
-  10% { background-color: #909dd2b5; }
-  20% { background-color: #6a7cc4b5; }
-  30% { background-color: #5667a9b5; }
-  40% { background-color: #6779beb5; }
-  50% { background-color: #5668a9b5; }
-  60% { background-color: #6779beb5; }
-  70% { background-color: #5667a9b5; }
-  80% { background-color: #6a7cc4b5; }
-  90% { background-color: #909dd2b5; }
-  100% { background-color: #b4afd8b5; }
+    0% {
+        background-color: #b4afd8b5;
+    }
+
+    10% {
+        background-color: #909dd2b5;
+    }
+
+    20% {
+        background-color: #6a7cc4b5;
+    }
+
+    30% {
+        background-color: #5667a9b5;
+    }
+
+    40% {
+        background-color: #6779beb5;
+    }
+
+    50% {
+        background-color: #5668a9b5;
+    }
+
+    60% {
+        background-color: #6779beb5;
+    }
+
+    70% {
+        background-color: #5667a9b5;
+    }
+
+    80% {
+        background-color: #6a7cc4b5;
+    }
+
+    90% {
+        background-color: #909dd2b5;
+    }
+
+    100% {
+        background-color: #b4afd8b5;
+    }
+}
+
+
+.search-label {
+    color: #e58e26;
 }
